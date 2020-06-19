@@ -1,0 +1,38 @@
+1 Sales
+2 Engineering
+3 Quality Assurance
+4 Finance
+5 Legal
+
+1 Sales Lead
+2 Salesperson
+3 Senior Engineer
+4 Software Engineer
+5 Intern
+6 Lead Tester
+7 QA Tester
+8 Accountant
+9 Legal Team Lead
+10 Laywer
+
+View Employees
+====================
+View Employees by Department
+View Employees by Manager
+View Managers
+
+Manage Employees
+====================
+Add Employee
+Transfer Employee
+Remove Employee
+Update Employee Details
+
+Manage Departments
+====================
+View All Departments
+View All Roles
+Add/Remove Department
+Add/Remove Roles
+
+
