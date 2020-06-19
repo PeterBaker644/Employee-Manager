@@ -13,7 +13,7 @@
 7 QA Tester
 8 Accountant
 9 Legal Team Lead
-10 Laywer
+10 Lawyer
 
 View Employees
 ====================
