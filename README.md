@@ -28,10 +28,10 @@ So that I can organize and plan my business
 ```
 
 ## Installation
-After cloning the repository to your computer, navigate to the Employee-Manager folder with your terminal and run 'npm install'. Using your MySQL Terminal, run both schema.sql and seed.sql.  
+After cloning the repository to your computer, navigate to the Employee-Manager folder with your terminal and run `npm install`. Using your MySQL Terminal, run both schema.sql and seed.sql.  
 
 ## Usage
-Using the commandline of your choice with node installed, run 'node app.js'.
+Using the commandline of your choice with node installed, run `node app.js`.
 
 ## License
 This repository uses an open-source license. Please check the readme badges or refer to the license documentation in the repository for more information.
