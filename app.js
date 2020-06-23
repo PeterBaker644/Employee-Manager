@@ -19,7 +19,7 @@ connection.connect(function (err) {
     if (err) throw err;
     console.log("connected as id " + connection.threadId + "\n");
     // Replace this text.
-    console.log(`New App, this one is about songs and shit.\n`);
+    console.log(`New App, this one is about people and shit.\n`);
     start();
 });
 
@@ -29,7 +29,6 @@ function userPrompt(prompt) { return inquirer.prompt(prompt); }
 
 async function start() {
     try {
-        console.log(await query("SELECT id, title FROM role"));
         let { choice } = await userPrompt(ask.startQuery);
         switch (choice) {
             case "VIEW":
@@ -55,18 +54,25 @@ async function start() {
     }
 }
 
+//
+// Work on the view/pivot tables last.
+//
+
 async function viewEmployees() {
     try {
         let { choice } = await userPrompt(ask.viewQuery);
         switch (choice) {
+            case "viewAll":
+                console.table(await query(db.viewAll))
+                break;
             case "viewByDep":
-                // action
+                // this is a pivot table
                 break;
             case "viewByManager":
-                // action
+                // this is also a pivot table
                 break;
             case "viewManagers":
-                console.table(await query(db.managerList));
+                console.table(await query(db.viewByManager));
                 break;
             case "HOME":
                 break;
@@ -77,6 +83,7 @@ async function viewEmployees() {
 }
 
 async function manageEmployees() {
+    // DONE minus database edit
     try {
         let { choice } = await userPrompt(ask.managementQuery);
         let employeeList = await query(db.employeeList);
@@ -85,7 +92,6 @@ async function manageEmployees() {
         let departmentList = await query(db.departmentList);
         switch (choice) {
             case "ADD":
-                // DONE minus database edit
                 let newEmployee = await userPrompt(ask.addEmployee(roleList, managerList));
                 //database edit
                 console.log(newEmployee);
@@ -119,32 +125,25 @@ async function manageEmployees() {
 
 async function manageDepartments() {
     try {
-        let { choice } = await userPrompt(ask.managementQuery);
-        let employeeList = await query(db.employeeList);
-        let managerList = await query(db.managerList);
+        let { choice } = await userPrompt(ask.departmentQuery);
         let roleList = await query(db.roleList);
         let departmentList = await query(db.departmentList);
         switch (choice) {
-            case "ADD":
-                // DONE minus database edit
-                let newEmployee = await userPrompt(ask.addEmployee(roleList, managerList));
-                //database edit
-                console.log(newEmployee);
+            case "listDept":
+                console.table(departmentList);
                 break;
-            case "TRANSFER":
-                let transferEmployee = await userPrompt(ask.transferEmployee(employeeList, departmentList, roleList, managerList));
-                //database edit
-                console.log(transferEmployee);
+            case "listRoles":
+                console.table(roleList);
                 break;
-            case "REMOVE":
-                let removeEmployee = await userPrompt(ask.removeEmployee(employeeList));
+            case "editDept":
+                let editDept = await userPrompt(ask.editDepartments(departmentList));
                 //database edit
-                console.log(removeEmployee);
+                console.log(editDept);
                 break;
-            case "UPDATE":
-                let editEmployee = await userPrompt(ask.editEmployee(employeeList, roleList, managerList));
+            case "editRoles":
+                let editRoles = await userPrompt(ask.editRoles(roleList, departmentList));
                 //database edit
-                console.log(editEmployee);
+                console.log(editRoles);
                 break;
             case "HOME":
                 break;
