@@ -23,8 +23,6 @@ connection.connect(function (err) {
     start();
 });
 
-
-
 function userPrompt(prompt) { return inquirer.prompt(prompt); }
 
 async function start() {
@@ -93,22 +91,66 @@ async function manageEmployees() {
         switch (choice) {
             case "ADD":
                 let newEmployee = await userPrompt(ask.addEmployee(roleList, managerList));
-                //database edit
                 console.log(newEmployee);
+                await query("INSERT INTO employee SET ?", {
+                    first_name: newEmployee.first_name,
+                    last_name: newEmployee.last_name,
+                    role_id: newEmployee.role_id,
+                    manager_id: newEmployee.manager_id
+                });
                 break;
             case "TRANSFER":
                 let transferEmployee = await userPrompt(ask.transferEmployee(employeeList, departmentList, roleList, managerList));
-                //database edit
+                // if (transferEmployee.managerConfirm) {
+                //     let manager = await query(db.autoSort,{id:transferEmployee.roleId})
+                //     console.log(manager);
+                // }
+                await query("UPDATE employee SET ? WHERE ?",
+                    [
+                        {
+                            manager_id: transferEmployee.managerId,
+                            role_id: transferEmployee.roleId
+                        },
+                        { id: transferEmployee.employeeId }
+                    ]
+                )
                 console.log(transferEmployee);
                 break;
             case "REMOVE":
                 let removeEmployee = await userPrompt(ask.removeEmployee(employeeList));
                 //database edit
                 console.log(removeEmployee);
+                if (removeEmployee.removeConfirm) {
+                    console.log("Removing employee...")
+                    await query("DELETE FROM employee WHERE ?", { id: removeEmployee.employeeId });
+                }
                 break;
             case "UPDATE":
                 let editEmployee = await userPrompt(ask.editEmployee(employeeList, roleList, managerList));
-                //database edit
+                switch (editEmployee.choice) {
+                    case "NAME":
+                        await query ("UPDATE employee SET ? WHERE ?",
+                            [
+                                {
+                                    first_name: editEmployee.newFirstName,
+                                    last_name: editEmployee.newLastName
+                                },
+                                { id: editEmployee.employeeId }
+                            ]
+                        );
+                        break;
+                    case "ROLE":
+                        await query ("UPDATE employee SET ? WHERE ?",
+                            [
+                                {
+                                    manager_id: editEmployee.managerId,
+                                    role_id: editEmployee.roleId
+                                },
+                                { id: editEmployee.employeeId }
+                            ]
+                        );
+                        break;
+                }
                 console.log(editEmployee);
                 break;
             case "HOME":
@@ -118,10 +160,6 @@ async function manageEmployees() {
         console.log(err);
     }
 }
-
-//
-// Wait to work on this one V
-//
 
 async function manageDepartments() {
     try {
@@ -138,6 +176,18 @@ async function manageDepartments() {
             case "editDept":
                 let editDept = await userPrompt(ask.editDepartments(departmentList));
                 //database edit
+                switch (editDept.choice) {
+                    case "ADD":
+                        await query("INSERT INTO department SET ?", {
+                            name: editDept.addName,
+                        });
+                        break;
+                    case "REMOVE":
+                        if (editDept.removeConfirm) {
+                            console.log("Removing department...")
+                            await query("DELETE FROM department WHERE ?", { id: editDept.removeId });
+                        }
+                }
                 console.log(editDept);
                 break;
             case "editRoles":
@@ -152,5 +202,3 @@ async function manageDepartments() {
         console.log(err);
     }
 }
-
-
