@@ -34,5 +34,3 @@ View All Departments
 View All Roles
 Add/Remove Department
 Add/Remove Roles
-
-

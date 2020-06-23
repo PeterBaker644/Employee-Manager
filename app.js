@@ -2,6 +2,7 @@ const inquirer = require("inquirer");
 const util = require("util");
 const mysql = require("mysql");
 const cTable = require('console.table');
+const ask = require('./lib/queries.js');
 
 const connection = mysql.createConnection({
     host: "localhost",
@@ -16,124 +17,10 @@ const query = util.promisify(connection.query).bind(connection);
 connection.connect(function (err) {
     if (err) throw err;
     console.log("connected as id " + connection.threadId + "\n");
+    // Replace this text.
     console.log(`New App, this one is about songs and shit.\n`);
     start();
 });
-
-const startQuery = [
-    {
-        type: "list",
-        message: "What would you like to do?",
-        name: "choice",
-        choices: [
-            {
-                name: "View Employees",
-                value: "VIEW",
-            },
-            {
-                name: "Manage Employees",
-                value: "MANAGE",
-            },
-            {
-                name: "Manage Departments",
-                value: "DEPARTMENT",
-            },
-            {
-                name: "Exit application",
-                value: "EXIT"
-            }
-        ]
-    }
-]
-
-const viewQuery = [
-    {
-        type: "list",
-        message: "Please select a function",
-        name: "choice",
-        choices: [
-            {
-                name: "View Employees by Department",
-                value: "viewByDep",
-            },
-            {
-                name: "View Employees by Manager",
-                value: "viewByManager",
-            },
-            {
-                name: "View Managers",
-                value: "Manager",
-            },
-            {
-                name: "Return to Previous Menu",
-                value: "HOME",
-            }
-        ]
-    }
-]
-
-const managementQuery = [
-    {
-        type: "list",
-        message: "Please select a function",
-        name: "choice",
-        choices: [
-            {
-                name: "Add Employee",
-                value: "ADD",
-            },
-            {
-                name: "Transfer Employee",
-                value: "TRANSFER",
-            },
-            {
-                name: "Remove Employee",
-                value: "REMOVE",
-            },
-            {
-                name: "Update Employee Details",
-                value: "UPDATE",
-            },
-            {
-                name: "Return to Previous Menu",
-                value: "HOME",
-            }
-        ]
-    }
-]
-
-const departmentQuery = [
-    {
-        type: "list",
-        message: "Please select a function",
-        name: "choice",
-        choices: [
-            {
-                name: "View All Deparments",
-                value: "listDept",
-            },
-            {
-                name: "Transfer Employee",
-                value: "listRoles",
-            },
-            {
-                name: "Add/Remove Department",
-                value: "editDept",
-            },
-            {
-                name: "Add/Remove Roles",
-                value: "editRoles",
-            },
-            {
-                name: "Return to Previous Menu",
-                value: "HOME",
-            }
-        ]
-    }
-]
-
-
-
 
 // Move queries to a separate file.
 

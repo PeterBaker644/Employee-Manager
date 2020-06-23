@@ -1,0 +1,22 @@
+{
+  "name": "employee-manager",
+  "version": "1.0.0",
+  "description": "A node CLI and MySQL content management application",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PeterBaker644/Employee-Manager.git"
+  },
+  "author": "Peter Baker",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/PeterBaker644/Employee-Manager/issues"
+  },
+  "homepage": "https://github.com/PeterBaker644/Employee-Manager#readme",
+  "dependencies": {
+    "inquirer": "^7.2.0"
+  }
+}
