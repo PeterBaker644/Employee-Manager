@@ -17,9 +17,7 @@ const query = util.promisify(connection.query).bind(connection);
 
 connection.connect(function (err) {
     if (err) throw err;
-    console.log("connected as id " + connection.threadId + "\n");
-    // Replace this text.
-    console.log(`New App, this one is about people and shit.\n`);
+    console.log(`\nWelcome to the employee content management system.\n`);
     start();
 });
 
@@ -30,15 +28,12 @@ async function start() {
         let { choice } = await userPrompt(ask.startQuery);
         switch (choice) {
             case "VIEW":
-                console.log("\nView\n");
                 await viewEmployees();
                 break;
             case "MANAGE":
-                console.log("\nManage\n");
                 await manageEmployees();
                 break;
             case "DEPARTMENT":
-                console.log("\nDepartment\n");
                 await manageDepartments();
                 break;
             case "EXIT":
@@ -52,10 +47,6 @@ async function start() {
     }
 }
 
-//
-// Work on the view/pivot tables last.
-//
-
 async function viewEmployees() {
     try {
         let { choice } = await userPrompt(ask.viewQuery);
@@ -63,14 +54,15 @@ async function viewEmployees() {
             case "viewAll":
                 console.table(await query(db.viewAll))
                 break;
-            case "viewByDep":
-                // this is a pivot table
-                break;
-            case "viewByManager":
-                // this is also a pivot table
-                break;
+            // case "viewByDep":
+            //     // this is a pivot table
+            // Charlie says "There are no pivot tables in MySQL"
+            //     break;
+            // case "viewByManagers:
+            //     // this is also a pivot table
+            //     break;
             case "viewManagers":
-                console.table(await query(db.viewByManager));
+                console.table(await query(db.viewManagers));
                 break;
             case "HOME":
                 break;
@@ -81,7 +73,6 @@ async function viewEmployees() {
 }
 
 async function manageEmployees() {
-    // DONE minus database edit
     try {
         let { choice } = await userPrompt(ask.managementQuery);
         let employeeList = await query(db.employeeList);
@@ -91,7 +82,6 @@ async function manageEmployees() {
         switch (choice) {
             case "ADD":
                 let newEmployee = await userPrompt(ask.addEmployee(roleList, managerList));
-                console.log(newEmployee);
                 await query("INSERT INTO employee SET ?", {
                     first_name: newEmployee.first_name,
                     last_name: newEmployee.last_name,
@@ -119,7 +109,6 @@ async function manageEmployees() {
             case "REMOVE":
                 let removeEmployee = await userPrompt(ask.removeEmployee(employeeList));
                 //database edit
-                console.log(removeEmployee);
                 if (removeEmployee.removeConfirm) {
                     console.log("Removing employee...")
                     await query("DELETE FROM employee WHERE ?", { id: removeEmployee.employeeId });
@@ -151,7 +140,6 @@ async function manageEmployees() {
                         );
                         break;
                 }
-                console.log(editEmployee);
                 break;
             case "HOME":
                 break;
@@ -175,7 +163,6 @@ async function manageDepartments() {
                 break;
             case "editDept":
                 let editDept = await userPrompt(ask.editDepartments(departmentList));
-                //database edit
                 switch (editDept.choice) {
                     case "ADD":
                         await query("INSERT INTO department SET ?", {
@@ -188,12 +175,22 @@ async function manageDepartments() {
                             await query("DELETE FROM department WHERE ?", { id: editDept.removeId });
                         }
                 }
-                console.log(editDept);
                 break;
             case "editRoles":
                 let editRoles = await userPrompt(ask.editRoles(roleList, departmentList));
-                //database edit
                 console.log(editRoles);
+                switch (editRoles.choice) {
+                    case "ADD":
+                        await query("INSERT INTO role SET ?", {
+                            title: editRoles.addName,
+                            salary: editRoles.newSalary,
+                            department_id: editRoles.newDepartmentId
+                        });
+                        break;
+                    case "REMOVE":                       
+                        console.log("Removing employee...")
+                        await query("DELETE FROM role WHERE ?", { id: editRoles.removeId });
+                }
                 break;
             case "HOME":
                 break;
