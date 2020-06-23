@@ -18,6 +18,7 @@ var questions = [
     when: function(answers) {
       return answers.bacon;
     }
+    // when: (answers) => answers.bacon;
   },
   {
     type: 'confirm',

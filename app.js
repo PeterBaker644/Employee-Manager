@@ -3,6 +3,7 @@ const util = require("util");
 const mysql = require("mysql");
 const cTable = require('console.table');
 const ask = require('./lib/queries.js');
+const db = require('./lib/mysql-queries.js');
 
 const connection = mysql.createConnection({
     host: "localhost",
@@ -22,55 +23,135 @@ connection.connect(function (err) {
     start();
 });
 
-// Move queries to a separate file.
+
 
 function userPrompt(prompt) { return inquirer.prompt(prompt); }
 
 async function start() {
     try {
-        let { choice } = await userPrompt(startQuery);
+        console.log(await query("SELECT id, title FROM role"));
+        let { choice } = await userPrompt(ask.startQuery);
         switch (choice) {
-            case "ARTIST":
-                // This is an array;
-                let {artist} = await userPrompt(artistQuery);
-                let artistResult = await query('SELECT position, artist, song, year FROM top5000 where ?',
-                    [{ artist: artist}]
-                );
-                console.table(artistResult);
+            case "VIEW":
+                console.log("\nView\n");
+                await viewEmployees();
                 break;
-            case "MULTI":
-                // All artists more than only?
-                let multiResult = await query('SELECT COUNT(position), artist FROM top5000 GROUP BY artist HAVING COUNT(position) > 1 ORDER BY COUNT(position) DESC;');
-                console.log(multiResult);
+            case "MANAGE":
+                console.log("\nManage\n");
+                await manageEmployees();
                 break;
-            case "YEAR":
-                let { yearStart, yearEnd } = await userPrompt(yearQuery);
-                let yearResult = await query(`SELECT position, artist, song, year FROM top5000 WHERE year BETWEEN ${yearStart} AND ${yearEnd}`);
-                console.table(yearResult);
+            case "DEPARTMENT":
+                console.log("\nDepartment\n");
+                await manageDepartments();
                 break;
-            case "SONG":
-                let { song } = await userPrompt(songQuery);
-                let songResult = await query('SELECT position, artist, song, year FROM top5000 where ?',
-                    [{ song: song}]
-                );
-                console.table(songResult);
-                break;
-            case "ALBUM":
-                let { albumArtist } = await userPrompt(albumQuery);
-                const albumSQLQuery = 
-                `SELECT topalbums.year, topalbums.position, topalbums.artist, top5000.song, topalbums.album FROM topalbums INNER JOIN top5000 ON topalbums.year = top5000.year AND topalbums.artist = top5000.artist WHERE topalbums.artist = '${albumArtist}' ORDER BY year ASC`;
-                let albumResult = await query(albumSQLQuery);
-                console.log(`${albumResult.length} matches found!`)
-                console.table(albumResult);
-                break;  
             case "EXIT":
-                console.log("Application terminated by the user.");
+                console.log("\nApplication terminated by the user.");
                 connection.end();
                 return;
         }
-        start();
+        await start();
     } catch (err) {
         console.log(err);
     }
 }
+
+async function viewEmployees() {
+    try {
+        let { choice } = await userPrompt(ask.viewQuery);
+        switch (choice) {
+            case "viewByDep":
+                // action
+                break;
+            case "viewByManager":
+                // action
+                break;
+            case "viewManagers":
+                console.table(await query(db.managerList));
+                break;
+            case "HOME":
+                break;
+        }
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+async function manageEmployees() {
+    try {
+        let { choice } = await userPrompt(ask.managementQuery);
+        let employeeList = await query(db.employeeList);
+        let managerList = await query(db.managerList);
+        let roleList = await query(db.roleList);
+        let departmentList = await query(db.departmentList);
+        switch (choice) {
+            case "ADD":
+                // DONE minus database edit
+                let newEmployee = await userPrompt(ask.addEmployee(roleList, managerList));
+                //database edit
+                console.log(newEmployee);
+                break;
+            case "TRANSFER":
+                let transferEmployee = await userPrompt(ask.transferEmployee(employeeList, departmentList, roleList, managerList));
+                //database edit
+                console.log(transferEmployee);
+                break;
+            case "REMOVE":
+                let removeEmployee = await userPrompt(ask.removeEmployee(employeeList));
+                //database edit
+                console.log(removeEmployee);
+                break;
+            case "UPDATE":
+                let editEmployee = await userPrompt(ask.editEmployee(employeeList, roleList, managerList));
+                //database edit
+                console.log(editEmployee);
+                break;
+            case "HOME":
+                break;
+        }
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+//
+// Wait to work on this one V
+//
+
+async function manageDepartments() {
+    try {
+        let { choice } = await userPrompt(ask.managementQuery);
+        let employeeList = await query(db.employeeList);
+        let managerList = await query(db.managerList);
+        let roleList = await query(db.roleList);
+        let departmentList = await query(db.departmentList);
+        switch (choice) {
+            case "ADD":
+                // DONE minus database edit
+                let newEmployee = await userPrompt(ask.addEmployee(roleList, managerList));
+                //database edit
+                console.log(newEmployee);
+                break;
+            case "TRANSFER":
+                let transferEmployee = await userPrompt(ask.transferEmployee(employeeList, departmentList, roleList, managerList));
+                //database edit
+                console.log(transferEmployee);
+                break;
+            case "REMOVE":
+                let removeEmployee = await userPrompt(ask.removeEmployee(employeeList));
+                //database edit
+                console.log(removeEmployee);
+                break;
+            case "UPDATE":
+                let editEmployee = await userPrompt(ask.editEmployee(employeeList, roleList, managerList));
+                //database edit
+                console.log(editEmployee);
+                break;
+            case "HOME":
+                break;
+        }
+    } catch (err) {
+        console.log(err);
+    }
+}
+
 

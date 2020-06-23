@@ -34,3 +34,26 @@ View All Departments
 View All Roles
 Add/Remove Department
 Add/Remove Roles
+
+Employee List:
+SELECT employee.id, 
+	CONCAT_WS(' - ', CONCAT_WS(' ', first_name, last_name), role.title) AS full_title, department.name
+  FROM employee
+  INNER JOIN role ON role.id = employee.role_id
+  INNER JOIN department ON department.id = role.department_id
+
+Manager List:
+SELECT employee.id,
+	CONCAT_WS(' - ', CONCAT_WS(' ', first_name, last_name), role.title) AS full_title,
+    department.name
+  FROM employee
+  INNER JOIN role ON role.id = employee.role_id
+  INNER JOIN department ON department.id = role.department_id
+  WHERE manager_id IS NULL;
+
+Role List:
+SELECT id, title FROM role
+
+Department List:
+SELECT * FROM department
+
