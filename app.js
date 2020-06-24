@@ -104,7 +104,6 @@ async function manageEmployees() {
                         { id: transferEmployee.employeeId }
                     ]
                 )
-                console.log(transferEmployee);
                 break;
             case "REMOVE":
                 let removeEmployee = await userPrompt(ask.removeEmployee(employeeList));
