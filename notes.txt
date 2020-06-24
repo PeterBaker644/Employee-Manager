@@ -34,3 +34,15 @@ View All Departments
 View All Roles
 Add/Remove Department
 Add/Remove Roles
+
+Flawed:
+SELECT 
+-- 	a.id,
+-- 	role.id AS Role, 
+--  department.name AS Department,
+    b.id as Manager
+  FROM employee a
+  INNER JOIN employee b ON b.id = a.manager_id
+  INNER JOIN role ON role.id = a.role_id
+  INNER JOIN department ON department.id = role.department_id
+  WHERE role.id = 2;
