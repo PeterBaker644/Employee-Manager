@@ -178,7 +178,6 @@ async function manageDepartments() {
                 break;
             case "editRoles":
                 let editRoles = await userPrompt(ask.editRoles(roleList, departmentList));
-                console.log(editRoles);
                 switch (editRoles.choice) {
                     case "ADD":
                         await query("INSERT INTO role SET ?", {

@@ -4,7 +4,7 @@ INSERT INTO department (name)
 VALUES ("Sales"),("Engineering"),("Quality Assurance"),("Finance"),("Legal");
 
 INSERT INTO role (title, salary, department_id)
-VALUES ("Sales Lead", 90000, 1),("Salesperson", 34000, 1),("Senior Software Engineer", 120000, 2),("Software Engineer", 72000, 2),("Engineering Intern", 35000, 2),("QA Lead", 72000, 3),("QA Tester", 55000, 3),("Accountant", 50000, 4), ("Legal Team Lead", 120000, 5),("Laywer", 100000, 5);
+VALUES ("Sales Lead", 90000, 1),("Salesperson", 34000, 1),("Senior Software Engineer", 120000, 2),("Software Engineer", 72000, 2),("Engineering Intern", 35000, 2),("QA Lead", 72000, 3),("QA Tester", 55000, 3),("Accountant", 50000, 4), ("Legal Team Lead", 120000, 5),("Lawyer", 100000, 5);
 
 INSERT INTO employee (first_name, last_name, role_id)
 VALUES ("Mika", "Sanchez", "1"),("Burt","Malcolm","3"),("Natasha", "Kirkov","6"),("Jasmine","Greene","8"),("Julian","Meyers", "9");
